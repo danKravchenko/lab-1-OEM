@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-a = 0.1
+a = 0.0
 b = 2.0
 # точність
 eps = 0.001
