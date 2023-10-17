@@ -31,7 +31,6 @@ plt.scatter(result_dyhotomy, fun(result_dyhotomy), color='red', s=20, zorder=2)
 #метод ітерацій
 def iteration(a, b, eps):
     x0 = fun(a)
-    max_iterations = 1000
     i = 0
 
     while i < max_iterations:
