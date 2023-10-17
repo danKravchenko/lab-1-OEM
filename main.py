@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
-a = 0.0
+a = 0.1
 b = 2.0
 # точність
 eps = 0.001
@@ -14,18 +15,18 @@ def fun(x):
 
 #метод дихотомії
 def dyhotomy(a, b, eps):
-    while (b-a) > 2*eps:
-            x1 = (a+b-eps) / 2
-            x2 = (a+b+eps) / 2
+    while (b - a) >= eps:
+        c = (a + b) / 2
 
-            if fun(x1) > fun(x2):
-                b = x2
-            else:
-                a = x1
-    return (a+b) / 2
+        if fun(c) > fun(b):
+            b = c
+        else:
+            a = c
+
+    return (a + b) / 2
 
 result_dyhotomy = dyhotomy(a, b, eps)
-print(f"Максимальна точка в межах від {a} до {b} x = {result_dyhotomy} та y = {fun(result_dyhotomy)}")
+print(f"Максимальна точка в межах від {a} до {b} x = {result_dyhotomy}, y = {fun(result_dyhotomy)}")
 plt.scatter(result_dyhotomy, fun(result_dyhotomy), color='red', s=20, zorder=2)
 
 #метод ітерацій
@@ -42,7 +43,7 @@ def iteration(a, b, eps):
             else:
                 break
         i += 1
-    return x0
+    return abs(x0)
 
 result_iteration = iteration(a, b, eps)
 print(f"Максимальна точка в межах від {a} до {b} x = {result_iteration}, y = {fun(result_iteration)}")
