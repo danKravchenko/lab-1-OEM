@@ -5,6 +5,8 @@ import random
 from matplotlib.patches import Polygon
 import tkinter as tk
 
+points = []
+
 def fun(x):
     return (x**2)*(math.e**(1-x**2))
 
@@ -26,7 +28,7 @@ def rectangles_method():
     S = h * S
     result_1.config(text=f"Відповідь: = {S}", bg="yellow")
     plt.close()
-    build_graph()
+    build_graph(True)
 
 # Метод трапецій
 def trapezium_method():
@@ -46,29 +48,29 @@ def trapezium_method():
     S = (h / 2) * (fun(a) + fun(b) + 2 * S)
     result_2.config(text=f"Відповідь: = {S}", bg="yellow")
     plt.close()
-    build_graph()
+    build_graph(True)
 
 # Метод Монте-Карло
 def monte_carlo_method():
+    points.clear()
     a = float(border_a_input_area.get())
     b = float(border_b_input_area.get())
     n = int(border_n_input_area.get())
 
     i = 0
-    minX = a
-    maxX = b
     S = 0
     while i != n:
-         i += 1
-         randX = minX + (maxX - minX) * random.uniform(0, 1)
-         S += fun(randX)
+        i += 1
+        randX = a + (b - a) * random.uniform(0, 1)
+        points.append(fun(randX))
+        S += fun(randX)
 
     integrate = (b - a) * (S / n)
     result_3.config(text=f"Відповідь: = {integrate}", bg="yellow")
     plt.close()
-    build_graph()
+    build_graph(False)
 
-def build_graph():
+def build_graph(show_area):
     # Задаємо межі відображення графіку
     x_value = np.linspace(-5, 5, 100)
     y_values = []  # Очистити список перед використанням
@@ -76,16 +78,23 @@ def build_graph():
     a = float(border_a_input_area.get())
     b = float(border_b_input_area.get())
 
-    # Виводимо заштриховану площу
-    fig, ax = plt.subplots()
-    ax.plot(x_value, fun(x_value), linewidth=2)
-    ax.set_ylim(bottom=0)
+    if show_area is True:
+        # Виводимо заштриховану площу
+        fig, ax = plt.subplots()
+        ax.plot(x_value, fun(x_value), linewidth=2)
+        ax.set_ylim(bottom=0)
 
-    ix = np.linspace(a, b)
-    iy = fun(ix)
-    verts = [(a, 0), *zip(ix, iy), (b, 0)]
-    poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
-    ax.add_patch(poly)
+        ix = np.linspace(a, b)
+        iy = fun(ix)
+        verts = [(a, 0), *zip(ix, iy), (b, 0)]
+        poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+        ax.add_patch(poly)
+    else:
+        for x, y in zip(np.linspace(a, b, len(points)), points):
+            if y > fun(x):
+                plt.scatter(x, y, color='red', s=30, zorder=1)
+            else:
+                plt.scatter(x, y, color='green', s=30, zorder=1)
 
     # Графік
     for x in x_value:
